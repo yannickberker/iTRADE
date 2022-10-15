@@ -1,0 +1,58 @@
+{
+    "upload_type": "software",
+    "title": "iTRADE: image-based TRAnsfer learning for Drug Effects",
+    "creators": [
+        {
+            "name": "Berker, Yannick",
+            "affiliation": "Hopp Children's Cancer Center Heidelberg (KiTZ)",
+            "orcid": "0000-0002-6707-0834"
+        },
+        {
+            "name": "Oppermann, Sina",
+            "affiliation": "Hopp Children's Cancer Center Heidelberg (KiTZ)",
+            "orcid": "0000-0002-9101-260X"
+        }
+    ],
+    "description": "Code supporting Berker et al. (2022) IEEE Trans Med Imaging, https://doi.org/10.1109/TMI.2022.3205554",
+    "version": "1.0.0",
+    "language": "eng",
+    "keywords": [
+        "Deep learning",
+        "Transfer learning",
+        "Molecular and cellular imaging",
+        "Microscopy",
+        "Pattern recognition and classification",
+        "Neural network",
+        "Spheroid",
+        "Phenotypic drug profiling",
+        "Translation"
+    ],
+    "access_right": "open",
+    "license": "GPLv3",
+    "related_identifiers": [
+        {
+            "identifier": "https://doi.org/10.1109/TMI.2022.3205554",
+            "relation": "isDocumentedBy",
+            "resource_type": "publication-article"
+        },
+        {
+            "identifier": "https://doi.org/10.5281/zenodo.5885481",
+            "relation": "requires",
+            "resource_type": "dataset"
+        }
+    ],
+    "contributors": [
+        {
+            "name": "Berker, Yannick",
+            "type": "Researcher",
+            "affiliation": "German Cancer Research Center (DKFZ)",
+            "orcid": "0000-0002-6707-0834"
+        },
+        {
+            "name": "Oppermann, Sina",
+            "type": "ProjectLeader",
+            "affiliation": "German Cancer Research Center (DKFZ)",
+            "orcid": "0000-0002-9101-260X"
+        }
+    ]
+}

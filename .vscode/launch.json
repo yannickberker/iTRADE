@@ -1,0 +1,87 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(iT) Try CNNs",
+            "type": "python",
+            "request": "launch",
+            "code": "from itrade.run_all import run_cnns; run_cnns()",
+            "args": [
+                "--fast-try",
+            ],
+            "justMyCode": false,
+            "console": "internalConsole",
+            "presentation": {
+                "group": "_iTRADE",
+                "order": 0,
+            },
+        },
+        {
+            "name": "(iT) Run CNNs",
+            "type": "python",
+            "request": "launch",
+            "code": "from itrade.run_all import run_cnns; run_cnns()",
+            "justMyCode": false,
+            "console": "internalConsole",
+            "presentation": {
+                "group": "_iTRADE",
+                "order": 1,
+            },
+        },
+        {
+            "name": "(iT) Rerun CNN prediction",
+            "type": "python",
+            "request": "launch",
+            "code": "from itrade.run_all import run_cnns; run_cnns()",
+            "args": [
+                "--load-model",
+                "--no-train",
+            ],
+            "justMyCode": false,
+            "console": "internalConsole",
+            "presentation": {
+                "group": "_iTRADE",
+                "order": 2,
+            },
+        },
+        {
+            "name": "(iT) Run iTReX (after CNNs)",
+            "type": "python",
+            "request": "launch",
+            "code": "from itrade.run_all import run_itrex; run_itrex()",
+            "justMyCode": false,
+            "console": "internalConsole",
+            "presentation": {
+                "group": "_iTRADE",
+                "order": 3,
+            },
+        },
+        {
+            "name": "(iT) Run plots (after iTReX)",
+            "type": "R-Debugger",
+            "request": "launch",
+            "debugMode": "file",
+            "allowGlobalDebugging": false,
+            "file": "itrade/util/plots.R",
+            "env": {
+                "DISPLAY": "",
+            },
+            "presentation": {
+                "group": "_iTRADE",
+                "order": 5,
+            },
+        },
+        {
+            "name": "(iT) Run all",
+            "type": "python",
+            "request": "launch",
+            "module": "itrade.run_all",
+            "justMyCode": false,
+            "console": "internalConsole",
+            "presentation": {
+                "group": "_iTRADE",
+                "order": 20,
+            },
+        },
+    ],
+}

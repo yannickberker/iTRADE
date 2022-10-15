@@ -1,0 +1,3 @@
+linters: linters_with_defaults(
+  object_usage_linter = NULL  # https://github.com/r-lib/lintr/issues/352
+  )

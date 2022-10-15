@@ -1,0 +1,63 @@
+cff-version: 1.2.0
+title: "iTRADE: image-based TRAnsfer learning for Drug Effects"
+message: Please cite this software using the metadata from 'preferred-citation'.
+type: software
+version: 1.0.0
+authors:
+  - family-names: Berker
+    given-names: Yannick
+    orcid: https://orcid.org/0000-0002-6707-0834
+    email: yannick.berker@alumni.dkfz.de
+  - family-names: Oppermann
+    given-names: Sina
+    orcid: https://orcid.org/0000-0002-9101-260X
+    email: sina.oppermann@kitz-heidelberg.de
+repository-code: https://github.com/yannickberker/iTRADE
+url: https://doi.org/10.1109/TMI.2022.3205554
+abstract: Software supporting Berker et al. (2022) IEEE Trans Med Imaging, https://doi.org/10.1109/TMI.2022.3205554
+keywords:
+  - Deep learning
+  - Transfer learning
+  - Molecular and cellular imaging
+  - Microscopy
+  - Pattern recognition and classification
+  - Neural network
+  - Spheroid
+  - Phenotypic drug profiling
+  - Translation
+license: GPL-3.0
+preferred-citation:
+  type: article
+  title: Patient-by-Patient Deep Transfer Learning for Drug-Response Profiling Using Confocal Fluorescence Microscopy of Pediatric Patient-Derived Tumor-Cell Spheroids
+  authors:
+    - family-names: Berker
+      given-names: Yannick
+      orcid: https://orcid.org/0000-0002-6707-0834
+      email: yannick.berker@alumni.dkfz.de
+    - family-names: ElHarouni
+      given-names: Dina
+      orcid: https://orcid.org/0000-0003-1488-0347
+    - family-names: Peterziel
+      given-names: Heike
+    - family-names: Witt
+      given-names: Olaf
+    - family-names: Oehme
+      given-names: Ina
+      orcid: https://orcid.org/0000-0002-0827-2356
+    - family-names: Schlesner
+      given-names: Matthias
+      orcid: https://orcid.org/0000-0002-5896-4086
+    - family-names: Oppermann
+      given-names: Sina
+      orcid: https://orcid.org/0000-0002-9101-260X
+      email: sina.oppermann@kitz-heidelberg.de
+  journal: IEEE Trans Med Imaging
+  year: 2022
+  doi: 10.1109/TMI.2022.3205554
+identifiers:
+  - description: This is the published journal paper
+    type: doi
+    value: 10.1109/TMI.2022.3205554
+  - description: This is the required dataset
+    type: doi
+    value: 10.5281/zenodo.5885481

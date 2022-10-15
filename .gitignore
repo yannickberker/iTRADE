@@ -1,0 +1,10 @@
+/.python-version
+/.Rprofile
+/*.log
+/*.egg-info/
+__pycache__/
+/build/
+/itrade-data/
+/itrade-results/
+/itrex-results/
+/plot-results/

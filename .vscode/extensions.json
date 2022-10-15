@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+        "ms-python.python",
+        "davidanson.vscode-markdownlint",
+        "foxundermoon.shell-format",
+        "tamasfe.even-better-toml",
+        "timonwong.shellcheck",
+        "GrapeCity.gc-excelviewer",
+        "REditorSupport.r",
+        "RDebugger.r-debugger",
+    ],
+}

@@ -1,0 +1,80 @@
+[tool.bandit.assert_used]
+skips = ["**/*_test.py", "**/test_*.py"]
+
+[tool.black]
+preview = true
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = [
+    "cv2",                 # https://github.com/opencv/opencv/issues/14590
+    "markdown2",
+    "matplotlib.*",
+    "pptx.*",
+    "pylint.*",            # https://github.com/PyCQA/pylint/issues/2079
+    "rpy2.*",
+    "sklearn.*",
+    "tensorboard.*",
+    "tensorflow",          # https://github.com/tensorflow/tensorflow/issues/12345
+    "tensorflow.compat.*",
+    "tf_keras_vis.*",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# https://github.com/SeleniumHQ/selenium/issues/9480
+module = ["itrade.util.itrex"]
+disallow_untyped_calls = false
+
+[tool.pylint.MASTER]
+# https://github.com/PyCQA/pylint/issues/4577
+init-hook = "import astroid; astroid.context.InferenceContext.max_inferred = 500"
+
+[tool.pylint."MESSAGES CONTROL"]
+enable = ["useless-suppression"]
+disable = [
+    "too-many-arguments",
+    "too-many-branches",
+    "too-many-locals",
+    "too-many-statements",
+]
+
+[tool.pylint.BASIC]
+good-names-rgxs = "df,dt,h,w,r,x,y,z"
+
+[tool.pylint.FORMAT]
+max-line-length = "88"
+
+[tool.pylint.TYPECHECK]
+generated-members = "cv2"
+
+[tool.pytest.ini_options]
+# python -Wd -c "import $module" 2>&1 | grep "^[^ ]" | sed -E 's/([.,;] | [(])/~/g; s/^.*site-packages.(.+).py:[0-9]+: (\w+Warning): ([^~]+).*$/"ignore:\3:\2:\1",/; s-/-.-g' | sort -u
+# pytest --collect-only
+filterwarnings = [
+    # module=colour
+    "ignore:Please use `convolve1d` from the `scipy.ndimage` namespace:DeprecationWarning:colour.quality.ssi",
+
+    # module=tensorflow
+    "ignore:the imp module is deprecated in favour of importlib and slated for removal in Python 3.12:DeprecationWarning:flatbuffers.compat",
+    "ignore:The distutils package is deprecated and slated for removal in Python 3.12:DeprecationWarning:tensorflow",
+
+    # module=tf_keras_vis.activation_maximization
+    "ignore:`tf_keras_vis.utils.regularizers` module is deprecated:DeprecationWarning:tf_keras_vis.utils.regularizers",
+    "ignore:Please use `(rotate|zoom)` from the `scipy.ndimage` namespace:DeprecationWarning",
+
+    # module=keras  # TensorFlow <=2.8/>=2.9
+    "ignore:(BICUBIC|BILINEAR|BOX|HAMMING|LANCZOS|NEAREST) is deprecated and will be removed in Pillow 10:DeprecationWarning:keras.(preprocessing|utils).image.utils",
+
+    # (manual)
+    "ignore:Please use `affine_transform` from the `scipy.ndimage` namespace:DeprecationWarning:keras.preprocessing.image",
+]

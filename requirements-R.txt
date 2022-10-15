@@ -1,0 +1,11 @@
+########################################################################################
+# This section summarizes minimum dependencies and hard constraints for R operations.  #
+#   pip install git+https://github.com/yannickberker/iTRADE[R]                         #
+# will ensure only that at least these compatible versions (or newer) are installed.   #
+########################################################################################
+
+rpy2
+
+########################################################################################
+# For version numbers at the time of generating paper results, see requirements.txt.   #
+########################################################################################

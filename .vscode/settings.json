@@ -1,0 +1,52 @@
+{
+    "[plaintext]": {
+        // plate-reader txt files
+        "editor.tabSize": 6,
+    },
+    "[python]": {
+        // black code style
+        "editor.rulers": [
+            88,
+        ],
+        // https://github.com/microsoft/vscode-python/issues/1883
+        "editor.formatOnPaste": false,
+        "editor.formatOnSaveMode": "file",
+    },
+    "[r][debian-control.r]": {
+        // tidyverse code style
+        "editor.rulers": [
+            80,
+        ],
+        "editor.tabSize": 2,
+        // https://yihui.org/en/2018/04/rprofile-trailing-newline/
+        "files.insertFinalNewline": true,
+    },
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true,
+    },
+    "editor.formatOnSave": true,
+    "json.schemas": [
+        {
+            "fileMatch": [
+                ".zenodo*.json",
+            ],
+            "url": "https://zenodo.org/schemas/deposits/records/legacyrecord.json",
+        },
+    ],
+    "python.formatting.provider": "black",
+    "python.analysis.diagnosticMode": "workspace",
+    "python.linting.banditArgs": [
+        "--configfile",
+        "pyproject.toml",
+    ],
+    "python.linting.banditEnabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.linting.prospectorEnabled": false,
+    "python.linting.pycodestyleEnabled": true,
+    "python.linting.pydocstyleEnabled": true,
+    "python.linting.pylamaEnabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.linting.pylintCategorySeverity.refactor": "Information",
+    "python.testing.pytestEnabled": true,
+}

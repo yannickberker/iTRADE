@@ -1,0 +1,52 @@
+{
+    "upload_type": "dataset",
+    "title": "iTRADE: image-based TRAnsfer learning for Drug Effects",
+    "creators": [
+        {
+            "name": "Berker, Yannick",
+            "affiliation": "Hopp Children's Cancer Center Heidelberg (KiTZ)",
+            "orcid": "0000-0002-6707-0834"
+        },
+        {
+            "name": "Oppermann, Sina",
+            "affiliation": "Hopp Children's Cancer Center Heidelberg (KiTZ)",
+            "orcid": "0000-0002-9101-260X"
+        }
+    ],
+    "description": "Data supporting Berker et al. (2022) IEEE Trans Med Imaging, https://doi.org/10.1109/TMI.2022.3205554",
+    "version": "1.0.0",
+    "language": "eng",
+    "keywords": [
+        "Spheroid",
+        "Phenotypic drug profiling",
+        "Translation"
+    ],
+    "access_right": "open",
+    "license": "CC-BY-NC-SA-4.0",
+    "related_identifiers": [
+        {
+            "identifier": "https://doi.org/10.1109/TMI.2022.3205554",
+            "relation": "isDocumentedBy",
+            "resource_type": "publication-article"
+        },
+        {
+            "identifier": "https://github.com/yannickberker/iTRADE",
+            "relation": "isRequiredBy",
+            "resource_type": "software"
+        }
+    ],
+    "contributors": [
+        {
+            "name": "Berker, Yannick",
+            "type": "DataCurator",
+            "affiliation": "German Cancer Research Center (DKFZ)",
+            "orcid": "0000-0002-6707-0834"
+        },
+        {
+            "name": "Oppermann, Sina",
+            "type": "ProjectLeader",
+            "affiliation": "German Cancer Research Center (DKFZ)",
+            "orcid": "0000-0002-9101-260X"
+        }
+    ]
+}

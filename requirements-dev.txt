@@ -1,0 +1,31 @@
+########################################################################################
+# This section summarizes minimum dependencies and hard constraints for development    #
+#   pip install git+https://github.com/yannickberker/iTRADE[dev]                       #
+# will ensure only that at least these compatible versions (or newer) are installed.   #
+########################################################################################
+
+bandit[toml]
+black
+cffconvert
+flake8
+flake8-black
+flake8-eradicate
+flake8-pytest-style
+isort
+markdown2
+mypy
+pandas-stubs
+pycodestyle
+pydocstyle
+pylama
+pylint
+pytest
+requests
+tensorboard
+types-python-dateutil
+types-requests
+types-setuptools
+
+########################################################################################
+# For version numbers at the time of generating paper results, see requirements.txt.   #
+########################################################################################
