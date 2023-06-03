@@ -2,7 +2,7 @@ cff-version: 1.2.0
 title: "iTRADE: image-based TRAnsfer learning for Drug Effects"
 message: Please cite this software using the metadata from 'preferred-citation'.
 type: software
-version: 1.0.0
+version: 1.0.1
 authors:
   - family-names: Berker
     given-names: Yannick

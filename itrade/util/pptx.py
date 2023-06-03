@@ -105,7 +105,7 @@ class TextAndImage(TypedDict):
 def write_powerpoint(
     contents: list[TextAndImage],
     filename: PathLike,
-    pptx: PathLike = None,
+    pptx: PathLike | None = None,
 ) -> None:
     """Save a list of slide content dictionaries into a PowerPoint presentation."""
     monkey_patch_pptx_picture_in_placeholder()

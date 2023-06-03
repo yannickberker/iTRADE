@@ -23,7 +23,7 @@ HOECHST_WAVELENGTH = 461
 
 def file2gray(
     filename: str | Path | Iterable[str | Path],
-    target_size: list[int] = None,
+    target_size: list[int] | None = None,
     axis: int = 0,
 ) -> np.ndarray:
     """Read (and resize) an image file into a [0, KERAS_MAX] Keras image."""
@@ -113,8 +113,8 @@ def rgb2png_buffer(image_rgb: np.ndarray, scale: float = 10.0) -> io.BytesIO:
     """Convert a Keras RGB image [0, KERAS_MAX] to a PNG file stored in a buffer."""
     image_out = rgb_scale_clip(image_rgb, scale)
 
-    _, buffer = cv2.imencode(".png", cv2.cvtColor(image_out, cv2.COLOR_RGB2BGR))
-    image_buffer = io.BytesIO(buffer)
+    _, buf = cv2.imencode(".png", cv2.cvtColor(image_out, cv2.COLOR_RGB2BGR))
+    image_buffer = io.BytesIO(buf)
 
     return image_buffer
 

@@ -2,6 +2,7 @@
 import filecmp
 from pathlib import Path
 
+from .cnn.visualization import USE_KERAS_VIS
 from .run_all import collect_arguments, download_data
 from .run_cnn import run_cnn
 
@@ -36,7 +37,10 @@ def test_reproducibility(tmp_path: Path) -> None:
         # model multiple times from the same process. Fortunately, we are happy enough
         # if the weights files are equal. Alternatively, we might replace
         # run_cnn(*args) above with subprocess.run(["itrade-run-cnn", *map(str, args)]).
-        and file.name != "saved_model.pb"
+        # fingerprint.pb files (saving model hashes since TensorFlow 2.12) also differ,
+        # and in TensorFlow 2.13.0rc0, "keras_metadata.pb" show differences ("input_2"
+        # vs. "input_1").
+        and file.suffix != ".pb"
     }
     assert len(files) > 0
 
@@ -53,3 +57,24 @@ def test_reproducibility(tmp_path: Path) -> None:
     assert len(equal) == len(files)
     assert len(different) == 0
     assert len(error) == 0
+
+
+def test_visualization(tmp_path: Path) -> None:
+    """Test that model visualization works."""
+    assert USE_KERAS_VIS
+
+    download_data()
+    args = collect_arguments(
+        # fmt: off
+        "--run-id", "VisTest",
+        "--dataset", "INF_R_1025_primary_V2_DS1",
+        "--no-train",
+        "--vis-model",
+        "--results-dir", tmp_path,
+        "--fast-try",
+    )
+    run_dir = run_cnn(*args)
+
+    vis_dir = run_dir / "visualization"
+    assert vis_dir.is_dir()
+    assert next(vis_dir.iterdir(), None) is not None

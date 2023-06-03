@@ -1,15 +1,18 @@
 """Access the iTReX web app."""
 import os
 import re
-import shutil
 import time
 from itertools import chain
 from pathlib import Path
-from typing import Any, Callable, Literal, TypeAlias
+from typing import Any, Callable, Literal, TypeAlias, get_args
 from urllib.request import urlretrieve
 
 from packaging import version
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import (
+    SessionNotCreatedException,
+    TimeoutException,
+    WebDriverException,
+)
 from selenium.webdriver import Chrome, Firefox, chrome, firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -24,7 +27,7 @@ IMA_LAYOUT_FILE = "iTReX-Demo_MRA_Layout-Imaging-3Plates.xlsx"
 RESULT_PREFIX = "iTReX-Results"
 
 BrowserType = Literal["chrome", "firefox"]
-Version: TypeAlias = version.LegacyVersion | version.Version | version.InfiniteTypes
+Version: TypeAlias = version.Version | version.InfiniteTypes
 
 
 class VersionMismatchErrorFirefox(ValueError):
@@ -52,17 +55,23 @@ def make_driver(
 ) -> Callable[[], WebDriver]:
     """Generate the get_driver function for cohort_download."""
     if browser is None:
-        if shutil.which(chrome.service.DEFAULT_EXECUTABLE_PATH):
-            browser = "chrome"
-        elif shutil.which(firefox.service.DEFAULT_EXECUTABLE_PATH):
-            browser = "firefox"
+        for browser in get_args(BrowserType):
+            try_get_driver = make_driver(browser, True, download_folder)
+            try:
+                with try_get_driver():
+                    ...
+            except (WebDriverException, SessionNotCreatedException):
+                continue
+            return try_get_driver
+        raise RuntimeError("Could not instantiate any web driver.")
 
     if browser == "chrome":
         if headless:
             # https://stackoverflow.com/q/50790733#comment91362049_50790733
             os.environ["DISPLAY"] = ""
         cro = chrome.options.Options()
-        cro.headless = headless
+        if headless:
+            cro.add_argument("--headless")
         prefs = {
             "download.default_directory": str(download_folder),
             "download.prompt_for_download": False,
@@ -74,7 +83,8 @@ def make_driver(
 
     elif browser == "firefox":
         ffo = firefox.options.Options()
-        ffo.headless = headless
+        if headless:
+            ffo.add_argument("--headless")
         ffo.set_preference("browser.download.folderList", 2)
         ffo.set_preference("browser.download.manager.showWhenStarting", False)
         ffo.set_preference("browser.download.dir", str(download_folder))
@@ -91,11 +101,11 @@ def process_cohort(
     layout_file: Path,
     readouts_file: Path,
     download_folder: Path,
-    get_driver: Callable[[], WebDriver] = None,
+    get_driver: Callable[[], WebDriver] | None = None,
     gui_timeout: int = 30,
     pre_download_wait: int = 5,
     download_timeout: int = 3600,
-    name: str = None,
+    name: str | None = None,
 ) -> Path:
     """Process cohort in iTReX and download results."""
     if get_driver is None:
@@ -184,22 +194,22 @@ def process_cohort(
             time.sleep(pre_download_wait)
             download_button.click()
 
-            while time.time() < deadline and not (file := get_new_file(files_before)):
+            while time.time() < deadline and not (file_ := get_new_file(files_before)):
                 time.sleep(1)
 
-            if file:
+            if file_:
                 # We expect a non-HTML file
-                if file.suffix != ".html":
+                if file_.suffix != ".html":
                     break
                 # yet sometimes see download failures in the form of some .html file:
-                files_before.add(file)
+                files_before.add(file_)
         else:
             on_exit(itrex_version)
             raise TimeoutError("Timeout waiting for creation of new non-HTML file.")
 
         size = -1
         while time.time() < deadline:
-            if size == (size := file.stat().st_size) and size > 0:
+            if size == (size := file_.stat().st_size) and size > 0:
                 break
             time.sleep(1)
         else:
@@ -209,7 +219,7 @@ def process_cohort(
         on_exit(itrex_version)
 
         if name is not None:
-            new_name = file.name.replace(RESULT_PREFIX, f"{RESULT_PREFIX}-{name}")
-            file = file.rename(file.parent / new_name)
+            new_name = file_.name.replace(RESULT_PREFIX, f"{RESULT_PREFIX}-{name}")
+            file_ = file_.rename(file_.parent / new_name)
 
-        return file
+        return file_

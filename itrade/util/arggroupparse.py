@@ -31,7 +31,7 @@ class ArgumentParser(argparse.ArgumentParser):
     # We could copy all @overload's for ArgumentParser.parse_args here,
     # but we do not allow arbitrary _N anyway since we assign .groups:
     def parse_args(  # type: ignore[override]
-        self, args: Sequence[str] = None, namespace: Namespace = None
+        self, args: Sequence[str] | None = None, namespace: Namespace | None = None
     ) -> Namespace:
         """Call parse_args and extract arguments by groups."""
         parsed_args = super().parse_args(args, namespace)

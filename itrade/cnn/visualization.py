@@ -67,6 +67,7 @@ def vis_model(args: Namespace, data: dict[str, Any], model: Model) -> None:
             ]
         )
     else:
+        warnings.warn(f"Skipping model visualization for dataset '{args.dataset}'.")
         return
 
     classes = data["classes"]
@@ -108,7 +109,7 @@ def save_keras_vis(
     prediction: float,
     folder: Path,
     fname_pattern: str,
-    image_bg: np.ndarray = None,
+    image_bg: np.ndarray | None = None,
 ) -> None:
     """Visualize Keras model using tf-keras-vis."""
     # tf-keras-vis>=0.6.0 normalizes maps to [0, 1], so one-sided cmaps are appropriate
@@ -226,7 +227,7 @@ def save_keras_vis(
             if image_bg is None:
                 image_bg = np.zeros((*image_input.shape[:-1], 3))
 
-            map_rgb = mpl.cm.get_cmap(vis_cmap)(vis_map)[:, :, :3]
+            map_rgb = mpl.colormaps[vis_cmap](vis_map)[:, :, :3]
 
             alpha = np.clip(vis_map, 0, 0.5)
             alpha = np.expand_dims(alpha, -1)

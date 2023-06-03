@@ -36,6 +36,8 @@ EPOCHS = 200
 LABEL_SMOOTHING = 0.4
 LEARNING_RATE_PHASE23 = 3e-07
 
+MODEL_FILE_NAME = "model.tf"
+
 
 def collect_arguments(*args: Any) -> tuple[Any, ...]:
     """Return standard parameters."""
@@ -64,7 +66,7 @@ def collect_arguments(*args: Any) -> tuple[Any, ...]:
 
 def download_data() -> None:
     """Download and extract data if required."""
-    if DATA_DIR.is_dir():
+    if DATA_DIR.is_dir() and next(DATA_DIR.glob("*"), None) is not None:
         return
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -133,7 +135,7 @@ def run_cnns() -> None:
             "--run-id", f"Phase2-{sid}",
             "--dataset", sid,
             "--load-model",
-            "--load-model-file-name", phase1_dir / "model.tf",
+            "--load-model-file-name", phase1_dir / MODEL_FILE_NAME,
             "--val-model",
             "--val-samples", 6,
             "--learning-rate", LEARNING_RATE_PHASE23,
@@ -150,7 +152,7 @@ def run_cnns() -> None:
             "--run-id", f"Phase3-{sid}",
             "--dataset", sid,
             "--load-model",
-            "--load-model-file-name", phase2_dir / "model.tf",
+            "--load-model-file-name", phase2_dir / MODEL_FILE_NAME,
             "--ct-files", phase2_dir / DIR_PRED / f"{sid}_{{P}}.txt",
             "--learning-rate", LEARNING_RATE_PHASE23,
             "--vis-model",
@@ -190,7 +192,7 @@ def run_cnns() -> None:
     # ... from Phase 1 to Phase 2 (by starting Phase 2 from early Phase-1 checkpoints)
     for model_file_name in phase1_dir.glob("model_checkpoint_e*.tf"):
         match = re.search(
-            "(?:^model_checkpoint_e)[0-9]+(?:_.*.tf$)", model_file_name.name
+            r"(?<=^model_checkpoint_e)\d+(?=_.*.tf$)", model_file_name.name
         )
         if match is None:
             raise ValueError("Unknown model file name")
@@ -227,7 +229,6 @@ def run_cnns() -> None:
     # Others train better, but still do not generalize.
 
     for structure in structures:
-
         struc_phase1_dir = run_cnn(
             *common_args,
             # fmt: off
@@ -248,7 +249,7 @@ def run_cnns() -> None:
             "--run-id", f"StructureStudy-Phase2-{transfer_sid}-{structure}",
             "--dataset", transfer_sid,
             "--load-model",
-            "--load-model-file-name", struc_phase1_dir / "model.tf",
+            "--load-model-file-name", struc_phase1_dir / MODEL_FILE_NAME,
             "--val-model",
             "--val-samples", 6,
             "--learning-rate", LEARNING_RATE_PHASE23,
@@ -262,7 +263,7 @@ def run_cnns() -> None:
             "--run-id", f"StructureStudy-Phase3-{transfer_sid}-{structure}",
             "--dataset", transfer_sid,
             "--load-model",
-            "--load-model-file-name", struc_phase2_dir / "model.tf",
+            "--load-model-file-name", struc_phase2_dir / MODEL_FILE_NAME,
             "--ct-files", struc_phase2_dir / DIR_PRED / f"{transfer_sid}_{{P}}.txt",
             "--learning-rate", LEARNING_RATE_PHASE23,
         )
@@ -276,7 +277,7 @@ def run_itrex() -> None:
     met_layout_file = itrex.download_demo_file(itrex.MET_LAYOUT_FILE, ITREX_DIR)
     ima_layout_file = itrex.download_demo_file(itrex.IMA_LAYOUT_FILE, ITREX_DIR)
 
-    plate_suffix_pattern = r"(?<=_)P(.)(_H104-03N\1[\w-][0-9]{2})?(?=\.txt$)"
+    plate_suffix_pattern = r"(?<=_)P(.)(_H104-03N\1[\w-]\d{2})?(?=\.txt$)"
 
     exception = None
     for folder, long_name, move_prefix, short_name, layout_file in (
@@ -306,8 +307,7 @@ def run_itrex() -> None:
             itrex.process_cohort(layout_file, readouts_file, ITREX_DIR, name=long_name)
         except Exception as ex:  # pylint: disable=broad-except
             exception = exception or ex
-            warnings.warn(
-                f"""
+            warnings.warn(f"""
                 Automated iTReX cohort processing failed. Feel free to try it manually:
                 - Visit {itrex.ITREX_URL} in your browser
                 - Accept terms and conditions
@@ -317,8 +317,7 @@ def run_itrex() -> None:
                 - Click "Start One-Click Analysis"
                 - After processing has finished, click "Download Results"
                 - Copy or move the downloaded file to {ITREX_DIR}
-                """
-            )
+                """)
     if exception is not None:
         raise exception
 
@@ -329,13 +328,11 @@ def run_plots() -> None:
         # pylint:disable=import-outside-toplevel
         from rpy2 import robjects
     except ModuleNotFoundError:
-        print(
-            """
+        print("""
             Cannot import `rpy2` module to generate plots."
             Try installing `R` and reinstalling iTRADE with the `R` extra.
             If `rpy2` continues to fail, try `Rscript itrade/util/plots.R`.
-            """
-        )
+            """)
         return
 
     script_file = Path(__file__).parent / "util" / "plots.R"

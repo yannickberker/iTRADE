@@ -9,7 +9,8 @@ black
 cffconvert
 flake8
 flake8-black
-flake8-eradicate
+# https://github.com/wemake-services/flake8-eradicate/issues/269
+# flake8-eradicate
 flake8-pytest-style
 isort
 markdown2

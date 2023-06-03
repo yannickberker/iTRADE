@@ -71,7 +71,7 @@ def add_arguments(parser: ArgumentParser) -> None:
     metadata.add_argument(
         "--fast-try",
         action="store_true",
-        help="enable fast try for debugging (6 samples, 2 epochs)",
+        help="enable fast try for debugging (2+2+2 samples, 1 epoch)",
     )
     metadata.add_argument(
         "--ct-files",
@@ -132,10 +132,10 @@ def load_metadata(
     for image_type in image_types:
         basenames = prefixes + image_type + suffix
         filenames = image_dir / basenames
-        filenames = [f if f.is_file() else pd.NA for f in filenames]
-        wells["File_" + image_type] = filenames
+        filenames_or_na = [f if f.is_file() else pd.NA for f in filenames]
+        wells["File_" + image_type] = filenames_or_na
 
-    wells["HasFiles"] = ~wells[("File_" + it for it in image_types)].isna().any(1)
+    wells["HasFiles"] = ~wells[["File_" + it for it in image_types]].isna().any(axis=1)
 
     # By default (Phase 1/2), include only control wells in training/validation
     well_types_tv = set(layouts.WELL_TYPES_CONTROLS)
@@ -153,8 +153,12 @@ def load_metadata(
         two_rows = wells.Row[wells.HasFiles].unique()[[-1, -2]]
         wells = wells[(wells.Plate == one_plate) & wells.Row.isin(two_rows)]
         wells_tv = wells_tv[(wells_tv.Plate == one_plate) & wells_tv.Row.isin(two_rows)]
-        # ... and reduce the number of validation controls to the minimum.
+        # ... reduce the number of validation controls to the minimum ...
         val_samples = 2
+        # ... and reduce the number of (prediction) wells to the minimum:
+        wells = pd.concat(
+            [wells[wells.HasFiles].head(1), wells[wells.HasFiles].tail(1)]
+        )
 
     plates = set(wells_tv.Plate)
 

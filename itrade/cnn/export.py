@@ -1,7 +1,7 @@
 """Export CNN data."""
 from argparse import Namespace
 from gzip import GzipFile
-from typing import Any
+from typing import Any, cast
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -95,6 +95,7 @@ def tsne(args: Namespace, data: dict[str, Any]) -> None:
     def mi_df_plus_array(midf: pd.DataFrame, key: str, arr: np.ndarray) -> pd.DataFrame:
         """Concat NumPy array to Pandas MultiIndex DataFrame using Multi-/RangeIndex."""
         tb.ensure(isinstance(midf.columns, pd.MultiIndex))
+        midf.columns = cast(pd.MultiIndex, midf.columns)
         tb.ensure(midf.columns.nlevels == 2)
         tb.ensure(key not in midf.columns.levels[0])
         indices = pd.MultiIndex.from_product([[key], range(arr.shape[-1])])
@@ -107,7 +108,6 @@ def tsne(args: Namespace, data: dict[str, Any]) -> None:
     df = mi_df_plus_array(df, "Features", data[PREDICT]["features"])
 
     # Remove all but the largest concentration for each drug series
-    grouped_conc = df.groupby(("Layout", "Treatment"))[[("Layout", "Concentration")]]
     grouped_conc = df.Layout.groupby("Treatment").Concentration
     df[("Concentration", "Fraction")] = grouped_conc.transform(
         lambda x: x / x.clip(lower=1e-100).max()
@@ -131,7 +131,7 @@ def tsne(args: Namespace, data: dict[str, Any]) -> None:
 
     # Compute t-SNE embedding
     tsne_ = TSNE(
-        perplexity=TSNE_PERPLEXITY,
+        perplexity=1 if args.fast_try else TSNE_PERPLEXITY,
         learning_rate="auto",
         init="random",
         random_state=RAND_STATE,

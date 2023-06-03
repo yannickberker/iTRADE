@@ -18,7 +18,7 @@ def now() -> datetime.datetime:
 def print_elapsed(
     start: datetime.datetime,
     task_name: str = "Task",
-    nel: int = None,
+    nel: int | None = None,
     el_name: str = "element",
 ) -> None:
     """Pretty-print elapsed time for a task."""

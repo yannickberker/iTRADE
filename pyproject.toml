@@ -58,8 +58,6 @@ max-line-length = "88"
 generated-members = "cv2"
 
 [tool.pytest.ini_options]
-# python -Wd -c "import $module" 2>&1 | grep "^[^ ]" | sed -E 's/([.,;] | [(])/~/g; s/^.*site-packages.(.+).py:[0-9]+: (\w+Warning): ([^~]+).*$/"ignore:\3:\2:\1",/; s-/-.-g' | sort -u
-# pytest --collect-only
 filterwarnings = [
     # module=colour
     "ignore:Please use `convolve1d` from the `scipy.ndimage` namespace:DeprecationWarning:colour.quality.ssi",
@@ -67,6 +65,11 @@ filterwarnings = [
     # module=tensorflow
     "ignore:the imp module is deprecated in favour of importlib and slated for removal in Python 3.12:DeprecationWarning:flatbuffers.compat",
     "ignore:The distutils package is deprecated and slated for removal in Python 3.12:DeprecationWarning:tensorflow",
+    "ignore:`np.bool8` is a deprecated alias for `np.bool_`:DeprecationWarning:tensorflow.python.framework.dtypes",
+    "ignore:module 'sre_constants' is deprecated:DeprecationWarning:tensorflow.python.debug.cli.debugger_cli_common",
+
+    # module=tensorboard
+    "ignore:`np.bool8` is a deprecated alias for `np.bool_`:DeprecationWarning:tensorboard.compat.tensorflow_stub.dtypes",
 
     # module=tf_keras_vis.activation_maximization
     "ignore:`tf_keras_vis.utils.regularizers` module is deprecated:DeprecationWarning:tf_keras_vis.utils.regularizers",
@@ -76,5 +79,6 @@ filterwarnings = [
     "ignore:(BICUBIC|BILINEAR|BOX|HAMMING|LANCZOS|NEAREST) is deprecated and will be removed in Pillow 10:DeprecationWarning:keras.(preprocessing|utils).image.utils",
 
     # (manual)
-    "ignore:Please use `affine_transform` from the `scipy.ndimage` namespace:DeprecationWarning:keras.preprocessing.image",
+    "ignore:Please use `affine_transform` from the `scipy.ndimage` namespace:DeprecationWarning:keras.(src.)?preprocessing.image",
+    "ignore:non-integer arguments to randrange\\(\\) have been deprecated since Python 3.10 and will be removed in a subsequent version:DeprecationWarning:random",
 ]

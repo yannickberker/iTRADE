@@ -136,7 +136,6 @@ def train_model(
     # All TensorBoard
 
     if args.tb_log_dir:
-
         # TensorBoard logs
 
         # Use unique directories to separate repeated runs:
@@ -161,6 +160,7 @@ def train_model(
             """Output activation histograms."""
 
             def __init__(self, layers: list[Layer]):
+                super().__init__()
                 self.layers = layers
                 self.inner_calls: dict[Layer, Callable] = {}
                 self.outer_calls: dict[Layer, Callable] = {}
@@ -197,14 +197,16 @@ def train_model(
                     self.outer_calls[layer] = outer_call
 
             def on_epoch_begin(
-                self, _epoch: int, _logs: dict[str, float] = None
+                self, _epoch: int, _logs: dict[str, float] | None = None
             ) -> None:
                 """Reset epoch outputs."""
                 for mode in self.mode_tbdirs:
                     for layer in self.layers:
                         self.epoch_outputs[mode][layer] = []
 
-            def on_epoch_end(self, epoch: int, _logs: dict[str, float] = None) -> None:
+            def on_epoch_end(
+                self, epoch: int, _logs: dict[str, float] | None = None
+            ) -> None:
                 """Write epoch output histograms."""
                 for mode in self.mode_tbdirs:
                     with self.writers[mode].as_default():
@@ -215,26 +217,26 @@ def train_model(
                             tf.summary.histogram(name, data, step=epoch)
 
             def on_train_batch_begin(
-                self, _batch: int, _logs: dict[str, float] = None
+                self, _batch: int, _logs: dict[str, float] | None = None
             ) -> None:
                 """Wrap layer calls for this batch."""
                 self.wrap_layer_calls()
 
             def on_train_batch_end(
-                self, _batch: int, _logs: dict[str, float] = None
+                self, _batch: int, _logs: dict[str, float] | None = None
             ) -> None:
                 """Restore layer calls and write training batch histograms."""
                 self.restore_layer_calls()
                 self.append_batch_to_epoch_data(TRAIN)
 
             def on_test_batch_begin(
-                self, _batch: int, _logs: dict[str, float] = None
+                self, _batch: int, _logs: dict[str, float] | None = None
             ) -> None:
                 """Wrap layer calls for this batch."""
                 self.wrap_layer_calls()
 
             def on_test_batch_end(
-                self, _batch: int, _logs: dict[str, float] = None
+                self, _batch: int, _logs: dict[str, float] | None = None
             ) -> None:
                 """Restore layer calls and write validation batch histograms."""
                 self.restore_layer_calls()
@@ -299,7 +301,7 @@ def train_model(
 
         cmd_writer = tf.summary.create_file_writer(str(tb_train_dir))
 
-        def log_command_line(_logs: dict[str, float] = None) -> None:
+        def log_command_line(_logs: dict[str, float] | None = None) -> None:
             """Write command line."""
             cmd = " ".join(map(shlex.quote, args.args_str))
             with cmd_writer.as_default():
@@ -316,6 +318,7 @@ def train_model(
                 """Write individual batch images to TensorBoard."""
 
                 def __init__(self) -> None:
+                    super().__init__()
                     self.writer = tf.summary.create_file_writer(str(tb_train_dir))
                     self.epoch: int = -1
                     self.image: tf.Variable = None
@@ -341,13 +344,13 @@ def train_model(
                     model.train_step = outer_train_step
 
                 def on_epoch_begin(
-                    self, epoch: int, _logs: dict[str, float] = None
+                    self, epoch: int, _logs: dict[str, float] | None = None
                 ) -> None:
                     """Store epoch to use in export."""
                     self.epoch = epoch
 
                 def on_train_batch_end(
-                    self, batch: int, _logs: dict[str, float] = None
+                    self, batch: int, _logs: dict[str, float] | None = None
                 ) -> None:
                     """Output the variables as images."""
                     name = f"input_e{1 + self.epoch}"
@@ -414,7 +417,7 @@ def train_model(
     start = tb.now()
     history = model.fit(
         **data["fit"],
-        epochs=2 if args.fast_try else args.epochs,
+        epochs=1 if args.fast_try else args.epochs,
         callbacks=all_callbacks,
         verbose=args.verbosity,
     )

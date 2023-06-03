@@ -14,7 +14,7 @@
         }
     ],
     "description": "Code supporting Berker et al. (2022) IEEE Trans Med Imaging, https://doi.org/10.1109/TMI.2022.3205554",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "language": "eng",
     "keywords": [
         "Deep learning",

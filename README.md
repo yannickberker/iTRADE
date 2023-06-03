@@ -9,7 +9,7 @@ This repository holds code supporting _Berker et al. (2022) IEEE Trans Med Imagi
 - An installation of Python (≥ v3.10; we used v3.10.4) including the `pip` package manager (see [python.org](https://www.python.org/downloads/)).
 - Everything required to install TensorFlow (≥ v2.8; we used v2.8.0) with GPU support, such as CUDA, CUPTI, and cuDNN (see [tensorflow.org](https://www.tensorflow.org/install/gpu) for details).
 - Depending on the desired postprocessing steps, additional dependencies as listed [below](#postprocessing-prerequisites).
-- Note: basic operation of the code has also been tested on Windows 10, and it might also work on macOS.
+- Note: basic operation of the code has also been tested on Windows 10, and it might also work on macOS. For v1.0.1, CNN training has also been tested on Windows 11 using Python v3.10.11 and TensorFlow v2.10.1, as well as Python v3.11.3 and TensorFlow v2.12.0 and v2.13.0rc1 (without GPU support).
 
 ## Installation
 
@@ -17,6 +17,12 @@ On the terminal, run
 
 ```shell
 pip install https://github.com/yannickberker/iTRADE/archive/main.zip
+```
+
+For GPU support on Windows (compare [tensorflow.org](https://www.tensorflow.org/install/pip#windows-native)), you may need to use Python v3.10 and run
+
+```shell
+pip install https://github.com/yannickberker/iTRADE/archive/main.zip "tensorflow<2.11"
 ```
 
 ## Testing GPU access
@@ -29,7 +35,7 @@ itrade-test-gpu
 
 ## Testing CNN operations
 
-To verify than CNN training works, run
+To verify that CNN training works, run
 
 ```shell
 itrade-run-cnns --fast-try

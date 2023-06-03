@@ -20,8 +20,7 @@ scikit-learn
 selenium>=4.1.1
 # >=2.8 for tf.config.experimental.enable_op_determinism
 # https://github.com/tensorflow/tensorflow/issues/53771
-# <2.9 for tf-keras-vis compatibility
-tensorflow>=2.8,<2.9
+tensorflow>=2.8
 tf-keras-vis>=0.8
 
 ########################################################################################

@@ -69,9 +69,7 @@ def load_layout(layout_dir: Path, dataset: str) -> tuple[pd.DataFrame, str]:
     df["IsTherapy"] = df.WellType == WELL_TYPE_THERAPY
     df["Label"] = df.WellType.apply(
         # 0 = pos, 1 = neg
-        lambda x: WELL_TYPES_CONTROLS.index(x)
-        if x in WELL_TYPES_CONTROLS
-        else pd.NA
+        lambda x: WELL_TYPES_CONTROLS.index(x) if x in WELL_TYPES_CONTROLS else pd.NA
     )
 
     return df, layout_type
